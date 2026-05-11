@@ -1,0 +1,7 @@
+[
+  {"name": "Dr. Aisha Sharma", "specialty": "Cardiology", "institution": "AIIMS Delhi"},
+  {"name": "Dr. Rohan Mehta", "specialty": "Oncology", "institution": "Tata Memorial Mumbai"},
+  {"name": "Dr. Priya Iyer", "specialty": "Endocrinology", "institution": "Apollo Chennai"},
+  {"name": "Dr. Vikram Singh", "specialty": "Neurology", "institution": "Fortis Gurugram"},
+  {"name": "Dr. Meera Nair", "specialty": "Pediatrics", "institution": "Manipal Bangalore"}
+]

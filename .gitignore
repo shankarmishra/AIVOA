@@ -48,3 +48,7 @@ htmlcov/
 .coverage
 coverage.xml
 *.cover
+
+# Playwright MCP local artifacts
+.playwright-mcp/
+*.png
