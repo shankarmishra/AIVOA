@@ -6,7 +6,7 @@ class Settings(BaseSettings):
 
     groq_api_key: str
     database_url: str
-    groq_model: str = "gemma2-9b-it"
+    groq_model: str = "llama-3.3-70b-versatile"
     groq_fallback_model: str = "llama-3.3-70b-versatile"
 
 
