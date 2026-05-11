@@ -167,23 +167,18 @@ AIVOA.AI/
 │   │   └── seeds/hcps.json
 │   ├── scripts/seed.py
 │   └── tests/                         13 tests, pytest
-├── frontend/
-│   ├── package.json
-│   ├── vite.config.ts                 Proxy to backend
-│   ├── tailwind.config.js             Custom tokens + animations
-│   ├── index.html                     Inter + Fraunces + JetBrains Mono
-│   └── src/
-│       ├── main.tsx, App.tsx, store.ts
-│       ├── api/                       RTK Query slices
-│       ├── features/                  Redux slices (form draft + chat)
-│       ├── components/                TopBar, Form, AIAssistantPanel,
-│       │                              ToolCallBubble, Table, Modal
-│       └── pages/                     LogInteractionPage, HistoryPage
-└── docs/
-    ├── superpowers/
-    │   ├── specs/2026-05-11-aivoa-hcp-crm-design.md
-    │   └── plans/2026-05-11-aivoa-hcp-crm.md
-    └── demo-script.md
+└── frontend/
+    ├── package.json
+    ├── vite.config.ts                 Proxy to backend
+    ├── tailwind.config.js             Custom tokens + animations
+    ├── index.html                     Inter + Fraunces + JetBrains Mono
+    └── src/
+        ├── main.tsx, App.tsx, store.ts
+        ├── api/                       RTK Query slices
+        ├── features/                  Redux slices (form draft + chat)
+        ├── components/                TopBar, Form, AIAssistantPanel,
+        │                              ToolCallBubble, Table, Modal
+        └── pages/                     LogInteractionPage, HistoryPage
 ```
 
 ---
@@ -234,8 +229,8 @@ All 5 tools demonstrated in under 7 minutes.
 Per the assignment doc, both deliverables go to the Google Form: **https://forms.gle/mkgZPhtkFtnvLJCz7**
 
 1. **GitHub repo URL** (this repo)
-2. **Video** (10–15 min) following `docs/demo-script.md`
+2. **Video** (10–15 min) — walkthrough of the UI, demo of all 5 LangGraph tools firing in the chat, a short code-structure tour, and a summary of the task.
 
 ---
 
-Built end-to-end with rigour: a written spec, a written implementation plan, TDD on the backend tools, and a Playwright smoke pass on the live app before submission. Spec and plan are in `docs/superpowers/`.
+Built end-to-end with rigour: TDD on the backend tools and a Playwright smoke pass on the live app before submission.
