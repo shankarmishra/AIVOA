@@ -19,6 +19,25 @@ def _resolve_hcp(db, name: str) -> HCP | None:
     return db.execute(stmt).scalar_one_or_none()
 
 
+def _parse_dt(value: str) -> datetime:
+    """Parse ISO datetime; fall back to now() if the LLM emitted a placeholder string."""
+    try:
+        return datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except (ValueError, AttributeError):
+        return datetime.now()
+
+
+def _normalize_list(value) -> list:
+    """Accept list, comma-separated string, or None; return list of trimmed strings."""
+    if value is None or value == "" or value == "None":
+        return []
+    if isinstance(value, list):
+        return [str(v).strip() for v in value if str(v).strip()]
+    if isinstance(value, str):
+        return [s.strip() for s in value.split(",") if s.strip()]
+    return []
+
+
 @tool
 def log_interaction(
     hcp_name: Annotated[str, "Name of the HCP (fuzzy match)"],
@@ -29,8 +48,8 @@ def log_interaction(
     outcomes: Annotated[str, "Outcomes of the interaction"] = "",
     follow_up_actions: Annotated[str, "Next steps"] = "",
     attendees: Annotated[str, "Who attended"] = "",
-    materials_shared: Annotated[list[str] | None, "Materials shared"] = None,
-    samples_distributed: Annotated[list[dict] | None, "Samples distributed"] = None,
+    materials_shared: Annotated[str, "Materials shared, comma-separated"] = "",
+    samples_distributed: Annotated[str, "Samples distributed, comma-separated"] = "",
 ) -> dict:
     """Log a new HCP interaction. Resolves the HCP by fuzzy name match and creates a row. Auto-generates an AI summary."""
     db = _db_session()
@@ -49,14 +68,14 @@ def log_interaction(
         row = Interaction(
             hcp_id=hcp.id,
             interaction_type=interaction_type,
-            occurred_at=datetime.fromisoformat(occurred_at),
+            occurred_at=_parse_dt(occurred_at),
             topics_discussed=topics_discussed,
             sentiment=Sentiment(sentiment) if sentiment in [s.value for s in Sentiment] else None,
             outcomes=outcomes,
             follow_up_actions=follow_up_actions,
             attendees=attendees,
-            materials_shared=materials_shared or [],
-            samples_distributed=samples_distributed or [],
+            materials_shared=_normalize_list(materials_shared),
+            samples_distributed=[{"name": s, "qty": 1} for s in _normalize_list(samples_distributed)],
             ai_summary=summary,
         )
         db.add(row)
@@ -90,7 +109,7 @@ def edit_interaction(
         if interaction_type is not None:
             row.interaction_type = interaction_type
         if occurred_at is not None:
-            row.occurred_at = datetime.fromisoformat(occurred_at)
+            row.occurred_at = _parse_dt(occurred_at)
         if topics_discussed is not None:
             row.topics_discussed = topics_discussed
         if sentiment is not None and sentiment in [s.value for s in Sentiment]:
@@ -120,9 +139,9 @@ def search_interactions(
         if hcp_name:
             stmt = stmt.where(HCP.name.ilike(f"%{hcp_name}%"))
         if from_date:
-            stmt = stmt.where(Interaction.occurred_at >= datetime.fromisoformat(from_date))
+            stmt = stmt.where(Interaction.occurred_at >= _parse_dt(from_date))
         if to_date:
-            stmt = stmt.where(Interaction.occurred_at <= datetime.fromisoformat(to_date))
+            stmt = stmt.where(Interaction.occurred_at <= _parse_dt(to_date))
         if topic_keyword:
             stmt = stmt.where(Interaction.topics_discussed.ilike(f"%{topic_keyword}%"))
         stmt = stmt.order_by(Interaction.occurred_at.desc()).limit(limit)
