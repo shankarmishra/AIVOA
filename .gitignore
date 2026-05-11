@@ -52,3 +52,6 @@ coverage.xml
 # Playwright MCP local artifacts
 .playwright-mcp/
 *.png
+
+# Internal planning docs (kept locally, not pushed)
+docs/
